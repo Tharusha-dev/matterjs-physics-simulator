@@ -1,16 +1,29 @@
 import { useState, useEffect, useRef } from 'react';
-import { Events ,Composite, Engine, Render, Bodies, Body,World ,Runner, Mouse , MouseConstraint} from 'matter-js'
+import { Events ,Composite, Engine, Render, Bodies,World ,Runner, Mouse , MouseConstraint} from 'matter-js'
 import Header from './components/Header';
 import PropertiesMenu from './components/PropertiesMenu';
-import ProjectsPanel from './components/ProjectsPanel';
+import ProjectsPanel from './components/OtherStuff';
 import GraphsMenu from './components/GraphsMenu';
 import Footer from './components/Footer.js';
+import Canvas from './components/testCanvas';
 import './App.css';
 let testObj = Bodies.rectangle(200,200,40,40,)
 // let testObj2 = Bodies.rectangle(500,200,40,40,)
 let testObj2 = Bodies.circle(500,200,20)
 
-
+function drawCircle(ctx, x, y, radius, fill, stroke, strokeWidth) {
+  ctx.beginPath()
+  ctx.arc(x, y, radius, 0, 2 * Math.PI, false)
+  if (fill) {
+    ctx.fillStyle = fill
+    ctx.fill()
+  }
+  if (stroke) {
+    ctx.lineWidth = strokeWidth
+    ctx.strokeStyle = stroke
+    ctx.stroke()
+  }
+}
 
 
 function App() {
@@ -46,14 +59,32 @@ function App() {
   const [selectedObject,setSelectedObject] = useState()
   const selectedObjectRef = useRef()
 
+  const [spawnerProperties,setSpawnerProperties] = useState({body:1,color:"#1ed760",density:0.001,friction:0.1})
+  const [isSpawning,setIsSpawning] = useState(false)
+  const isSpawningRef = useRef(false)
+
+  const [spawnerLocation,setSpawnerLocation] = useState(null)
+  let spawnerLocationRef = useRef(null)
+
+  let spawners = []
+
   const countTen = useRef(0)
+  const uiLayer = useRef()
   let graphingObject = null
 
+  const getSpawnerProperties = function(childdata){
+    setSpawnerProperties(childdata)
 
+  }
 
   const getProperties = (childdata) => {
     setProperties(childdata);
   }
+
+  const getWorldProperties = (childdata) => {
+    setWorldProperties(childdata)
+  }
+
 
   const getIsErased = () => {
     setIsErasing(!isErasing)
@@ -65,34 +96,29 @@ function App() {
     graphSelectRef.current = !isSelectingGraph
   }
 
-  const getWorldProperties = (childdata) => {
-    setWorldProperties(childdata)
+  const getIsSpawning = () => {
+    setIsSpawning(!isSpawning)
+    isSpawningRef.current = !isSpawning
+
   }
 
-  // const loadImage = (url, onSuccess, onError) => {
-  //   const img = new Image();
-  //   img.onload = () => {
-  //     onSuccess(img.src);
-  //   };
-  //   img.onerror = onError();
-  //   img.src = url;
-  // };
-
-  // loadImage('Ellipse.png',url =>{console.log("sucesss");let highlightedTextuere = url },() => {console.log("image load error")})
-
-  const scene = useRef()
+      // if (isSpawningRef.current && spawnerLocation != null){
+      //   console.log(spawnerLocation["x"])
+      // }
+  const scene = useRef()    
   const isDragging = useRef(false)
   const engine = useRef(Engine.create())
 
   useEffect(() => {
+
     const cw = 1100;
     const ch = 700;
 
 
-    // highlightedTextuere.onload = () =>  
 
     const render = Render.create({
-      element: scene.current,
+      canvas : scene.current,
+      
       engine: engine.current,
       options: {
         width: cw,
@@ -102,11 +128,8 @@ function App() {
       }
     })
 
- 
-    // highlightedTextuere.onerror(console.log("t"))
-    // highlightedTextuere.onError(()=>{console.log("why")})
-
-
+    console.log("gravity "+engine.current.gravity.y + "x : " + engine.current.gravity.x)
+    let context = render.canvas.getContext('2d')
     let mouse = Mouse.create(render.canvas);
 
     let mouseConstraint = MouseConstraint.create(engine.current,{mouse : mouse,constraint : {render : {visible : false}}})
@@ -117,77 +140,69 @@ function App() {
       Bodies.rectangle(cw/2, ch, cw, 20, { isStatic: true, density:1}),
       Bodies.rectangle(0, ch/2 , 20, ch, { isStatic: true ,density:1}),
       Bodies.rectangle(cw, ch/2 , 20, ch, { isStatic: true ,density:1}),
-      // testObj,
-      // testObj2,
+   
       mouseConstraint,
 
     ])
 
     Runner.run(engine.current)
     Render.run(render)
-
-
     
-    Events.on(mouseConstraint,"mousedown",function(event){handleSelections(mouseConstraint.body)})
-    
-    var dragBody = null;
-
-    Events.on(mouseConstraint,"startdrag",function(event){isDragging.current = true ; dragBody = event.body})
-    Events.on(mouseConstraint,"enddrag",function(){isDragging.current = false ; })
-
-    Events.on(engine.current,'beforeUpdate',function(){
-
-
-      // Tried to make a walkaround for CCD dosent seems to work :(
-
-      // if(dragBody != null ){
-
-      //   // console.log("drag")  
-        
-      //   if (dragBody.velocity.x > 20.0){
-      //     Body.setVelocity(dragBody,{x:20,y:dragBody.velocity.y})
-      //     console.log("drag tilllll")
-          
-      //   }
-
-      //   if (dragBody.velocity.y > 20.0){
-      //     Body.setVelocity(dragBody,{x: dragBody.velocity.x, y:20})
-      //   }
-
-      //   if (dragBody.positionImpulse.x > 20.0) {
-      //     dragBody.positionImpulse.x = 20.0;
-      //   }
-
-      //   if (dragBody.positionImpulse.y > 20.0) {
-      //     dragBody.positionImpulse.y = 20.0;
-      //   }
-      // }
-
-
-    })
-
+    Events.on(mouseConstraint,"mousedown",function(event){handleSelections(mouseConstraint)})
     
 
+    Events.on(mouseConstraint,"startdrag",function(event){isDragging.current = true })
+    Events.on(mouseConstraint,"enddrag",function(){isDragging.current = false })
+
+    // Events.on(render,'afterRender',function(){
+
+
+
+ 
+    //   scene.current.getContext('2d').beginPath();
+    //   scene.current.getContext('2d').arc(100, 100, 20 , 0, 2 * Math.PI, false);
+    //   scene.current.getContext('2d').fillStyle = 'red';
+    //   scene.current.getContext('2d').fill();
+
+    // })
 
     Events.on(engine.current,'afterUpdate',function(){
 
+  
       countTen.current = countTen.current + 1 ; 
       
       if(countTen.current == 10){
-        // console.log("done");
         countTen.current = 0;
       
         if(selectedObjectRef.current != null){
           
           setGraphingPos(selectedObjectRef.current.velocity.y * -1);
-          // console.log(selectedObjectRef.current.velocity.y * -1)
           
-          setTicks(ticks+1)}}})
+          setTicks(ticks+1)}}
 
-  // Events.on(engine.current.world)
+      if (isSpawningRef.current && spawnerLocationRef.current != null) {
+        console.log("rain")
+        console.log(spawnerLocationRef.current)
+
+        // World.add(engine.current.world,Bodies.circle(spawnerLocationRef["x"],spawnerLocationRef["y"],10))
+        World.add(engine.current.world,[Bodies.circle(spawnerLocationRef.current["x"],spawnerLocationRef.current["y"],10)])
+
+
+      } 
+        
+  
+      })
+
+
+      
+         
+
+ 
+    // console.log(scene.current.getContext('2d'))
+    // console.log(render.context)
 
     return () => {
-      
+
       
       Render.stop(render)
       World.clear(engine.current.world)
@@ -200,68 +215,73 @@ function App() {
   }, [])
 
 
-  const handleSelections = function(body){
 
-    // console.log(body)
-    // console.log(graphSelectRef.current)
+  const handleSelections = function(mouseConstraint){
 
-    if(erasingRef.current && body != null){
-      console.log(body)
-      Composite.remove(engine.current.world,body)
+    console.log("down")
+
+    if(isSpawningRef.current){
+
+      console.log("spawn")
+      setSpawnerLocation({x:mouseConstraint.mouse.position.x,y:mouseConstraint.mouse.position.y})
+      spawnerLocationRef.current = {x:mouseConstraint.mouse.position.x,y:mouseConstraint.mouse.position.y}
+      console.log(spawnerLocationRef)
+
+
+    }
+
+    if(erasingRef.current && mouseConstraint.body != null){
+      console.log(mouseConstraint.body)
+      Composite.remove(engine.current.world,mouseConstraint.body)
     }
 
 
-    if(graphSelectRef.current && body != null){
-      setSelectedObject(body)
-      graphingObject = body
+    if(graphSelectRef.current && mouseConstraint.body != null){
+      setSelectedObject(mouseConstraint.body)
+      graphingObject = mouseConstraint.body
       graphingObject.render.lineWidth = 6
-      // selectedObject.render.lineWidth = 6
-      // body.render.lineWidth = 6
-      // setSelectedObject(body)
-      selectedObjectRef.current = body
+
+      selectedObjectRef.current = mouseConstraint.body
       setIsSelectingGraph(false)
       graphSelectRef.current = false
-      // setGraphingPos(body.position.y)
 
     }
 
   
   }
 
-  const stopGraphing = function(){
+  const resetGraphing = function(){
     selectedObjectRef.current = null
-    console.log("stopped graphing")
-    selectedObject.render.lineWidth = 1
+    console.log("reset graphing")
+    selectedObject.render.lineWidth = 0
 
   }
 
-  // const stopEngine = function(){
+  const stopGraphing = function(){
+    selectedObjectRef.current = null
+    console.log("stop graphing")
 
-  //   // World.clear(engine.current.world)
-  //   Engine.clear(engine.current)
-  //   Runner.stop(engine.current)
-  //   // Render.stop(render)
+  }
 
-  // }
+
 
   const handleMouseDown = function(e){
-    // console.log(testObj.position.y)
 
+    console.log(isSpawning)
 
-    // propertiesData[0].worldProperties[0].reset = "test"
-    // Body.set(testObj,{render:{fillStyle : "red"}})
-    
-
-
-    // console.log(propertiesData[0].worldProperties[0].reset)
-    // testObj2.render.lineWidth = 6
+    // if(!isSelectingGraph && !isErasing && !isDragging.current && isSpawning){
+    //   console.log("spawn")
+    //   setSpawnerLocation({x:e.pageX-380,y:e.pageY-240})
+    // }
 
     if(!isSelectingGraph && !isErasing && !isDragging.current && properties.shape == 1 ){
 
   
       World.add(engine.current.world,[Bodies.circle(e.pageX-380,e.pageY-240,properties.size,{density : properties.density,friction:properties.friction,render:{fillStyle : properties.color}})])
     
-    }if(!isSelectingGraph && !isErasing && !isDragging.current && properties.shape == 2){ 
+    }
+    
+    if(!isSelectingGraph && !isErasing && !isDragging.current && properties.shape == 2){ 
       // console.log(properties.shape);
 
       console.log("fric "+properties.friction)
@@ -284,12 +304,16 @@ function App() {
 
     
     <>
-    <Header user_name="tharusha"/>
-    <PropertiesMenu erase = {getIsErased} resetScene = {resetScene} worldProperties = {getWorldProperties}  objectProperties = {getProperties}/>
-    <ProjectsPanel/>
-    <div ref={scene} onClick= {handleMouseDown} className= 'this'/>
-    <GraphsMenu stopGraphing = {stopGraphing} ticks={ticks} testData={graphingPos} graphSelect = {getIsGraphSelecting} />
+    <Header/>
+    <PropertiesMenu functions={{ reset:resetScene,erase:getIsErased }} worldProperties = {getWorldProperties}  objectProperties = {getProperties}/>
+    <ProjectsPanel setSpawning = {getIsSpawning} spawnerProperties = {getSpawnerProperties} />
+    <canvas ref={scene} onClick= {handleMouseDown} className= 'physics-engine'></canvas>
+    {/* <canvas ref={uiLayer}></canvas> */}
+    <GraphsMenu functions = {{reset:resetGraphing,stop:stopGraphing}} graphingData={{time:ticks,data:graphingPos}} graphSelect = {getIsGraphSelecting} />
     <Footer />
+    <img src="" alt="" />
+    {/* <Canvas /> */}
+
     </>
       
   )
