@@ -1,70 +1,22 @@
-# Getting Started with Create React App
+# Simple Physics Simulator with Graphing
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project consist of a simple 2d pysics simulator made using the Matter.js physics engine. The UI is made with React.js and the graphing is done with Charts.js .
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Add **circles or rectangles** bodies (*2d bodies*) to the world by clicking the scene .
+- Change **size, friction, density or color** of bodies before spawning them in .
+- Remove bodies from the scene or reset the scene entirely .
+- Use **spawner** to spawn a bunch of bodies at the same time .
+- Use the graphing menu to graph any bodies **Y axis velocity against time** .
+- Download the graph as a PNG image.
 
-### `npm start`
+## Technologies Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+|<a href="https://reactjs.org/"><img src="https://logos-download.com/wp-content/uploads/2016/09/React_logo_wordmark.png" width="200" /><a/>|<a href="https://brm.io/matter-js/"><img src="https://camo.githubusercontent.com/77e2685e9b84be282f193a05c6571760200f8adfaf92892490ade52a596f2a7c/68747470733a2f2f62726d2e696f2f6d61747465722d6a732f696d672f6d61747465722d6a732e737667" width="200" /></a>|<a href="https://www.chartjs.org/"><img src="https://avatars.githubusercontent.com/u/10342521?s=280&v=4" width="200" /> </a>|  
+|--|--| --|
+|  |  |
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
