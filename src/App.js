@@ -2,10 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { Events ,Composite, Engine, Render, Bodies,World ,Runner, Mouse , MouseConstraint} from 'matter-js'
 import Header from './components/Header';
 import PropertiesMenu from './components/PropertiesMenu';
-import ProjectsPanel from './components/OtherStuff';
+import ProjectsPanel from './components/specialObjects.js';
 import GraphsMenu from './components/GraphsMenu';
 import Footer from './components/Footer.js';
-import Canvas from './components/testCanvas';
 import './App.css';
 let testObj = Bodies.rectangle(200,200,40,40,)
 // let testObj2 = Bodies.rectangle(500,200,40,40,)
@@ -50,6 +49,7 @@ function App() {
   const [isErasing,setIsErasing] = useState(false);
   const erasingRef = useRef(false);
 
+
   const [isSelectingGraph,setIsSelectingGraph] = useState(false)
   const graphSelectRef = useRef(false)  
 
@@ -60,19 +60,23 @@ function App() {
   const selectedObjectRef = useRef()
 
   const [spawnerProperties,setSpawnerProperties] = useState({body:1,color:"#1ed760",density:0.001,friction:0.1})
+  const spawningBodyRef = useRef(1);
   const [isSpawning,setIsSpawning] = useState(false)
   const isSpawningRef = useRef(false)
 
   const [spawnerLocation,setSpawnerLocation] = useState(null)
   let spawnerLocationRef = useRef(null)
 
-  let spawners = []
-
   const countTen = useRef(0)
-  const uiLayer = useRef()
+
   let graphingObject = null
 
+  
+
   const getSpawnerProperties = function(childdata){
+    
+    spawningBodyRef.current = childdata.body
+    console.log(spawningBodyRef.current)
     setSpawnerProperties(childdata)
 
   }
@@ -102,12 +106,10 @@ function App() {
 
   }
 
-      // if (isSpawningRef.current && spawnerLocation != null){
-      //   console.log(spawnerLocation["x"])
-      // }
-  const scene = useRef()    
+  const scene = useRef()   
   const isDragging = useRef(false)
   const engine = useRef(Engine.create())
+
 
   useEffect(() => {
 
@@ -154,17 +156,7 @@ function App() {
     Events.on(mouseConstraint,"startdrag",function(event){isDragging.current = true })
     Events.on(mouseConstraint,"enddrag",function(){isDragging.current = false })
 
-    // Events.on(render,'afterRender',function(){
 
-
-
- 
-    //   scene.current.getContext('2d').beginPath();
-    //   scene.current.getContext('2d').arc(100, 100, 20 , 0, 2 * Math.PI, false);
-    //   scene.current.getContext('2d').fillStyle = 'red';
-    //   scene.current.getContext('2d').fill();
-
-    // })
 
     Events.on(engine.current,'afterUpdate',function(){
 
@@ -181,11 +173,18 @@ function App() {
           setTicks(ticks+1)}}
 
       if (isSpawningRef.current && spawnerLocationRef.current != null) {
-        console.log("rain")
-        console.log(spawnerLocationRef.current)
+     
 
-        // World.add(engine.current.world,Bodies.circle(spawnerLocationRef["x"],spawnerLocationRef["y"],10))
+
+        if(spawningBodyRef.current == 1 ){
         World.add(engine.current.world,[Bodies.circle(spawnerLocationRef.current["x"],spawnerLocationRef.current["y"],10)])
+
+        }if (spawningBodyRef.current == 2 ) {
+          
+          World.add(engine.current.world,[Bodies.rectangle(spawnerLocationRef.current["x"],spawnerLocationRef.current["y"],10,10)])
+          // World.add(engine.current.world,[Bodies.circle(spawnerLocationRef.current["x"],spawnerLocationRef.current["y"],10)])
+
+        }
 
 
       } 
@@ -194,12 +193,10 @@ function App() {
       })
 
 
-      
-         
 
- 
-    // console.log(scene.current.getContext('2d'))
-    // console.log(render.context)
+
+  
+
 
     return () => {
 
@@ -218,7 +215,7 @@ function App() {
 
   const handleSelections = function(mouseConstraint){
 
-    console.log("down")
+
 
     if(isSpawningRef.current){
 
@@ -252,14 +249,14 @@ function App() {
 
   const resetGraphing = function(){
     selectedObjectRef.current = null
-    console.log("reset graphing")
+    
     selectedObject.render.lineWidth = 0
 
   }
 
   const stopGraphing = function(){
     selectedObjectRef.current = null
-    console.log("stop graphing")
+  
 
   }
 
@@ -267,32 +264,29 @@ function App() {
 
   const handleMouseDown = function(e){
 
-    console.log(isSpawning)
-
-    // if(!isSelectingGraph && !isErasing && !isDragging.current && isSpawning){
-    //   console.log("spawn")
-    //   setSpawnerLocation({x:e.pageX-380,y:e.pageY-240})
-    // }
-
-    if(!isSelectingGraph && !isErasing && !isDragging.current && properties.shape == 1 ){
+    if(!isSelectingGraph && !isErasing && !isDragging.current){
+      const canvasRect = scene.current.getBoundingClientRect(); //canvas offset
+      if(properties.shape == 1 ){
 
   
-      World.add(engine.current.world,[Bodies.circle(e.pageX-380,e.pageY-240,properties.size,{density : properties.density,friction:properties.friction,render:{fillStyle : properties.color}})])
-    
-    }
-    
-    if(!isSelectingGraph && !isErasing && !isDragging.current && properties.shape == 2){ 
-      // console.log(properties.shape);
-
-      console.log("fric "+properties.friction)
-
-      World.add(engine.current.world,[Bodies.rectangle(e.pageX-380,e.pageY-240,properties.size,properties.size,{density : properties.density,friction:properties.friction,render:{fillStyle : properties.color}})])
+        World.add(engine.current.world,[Bodies.circle(e.pageX-canvasRect.left,e.pageY-canvasRect.top,properties.size,{density : properties.density,friction:properties.friction,render:{fillStyle : properties.color}})])
       
+      }
+      
+      if(properties.shape == 2){ 
+    
+  
+        World.add(engine.current.world,[Bodies.rectangle(e.pageX-canvasRect.left,e.pageY-canvasRect.top,properties.size,properties.size,{density : properties.density,friction:properties.friction,render:{fillStyle : properties.color}})])
+        
+      }
     }
+  
+
+ 
   }
 
   const resetScene = function(){
-    console.log(Composite.allBodies(engine.current.world));
+ 
     const toRemove = Composite.allBodies(engine.current.world).slice(4,Composite.allBodies(engine.current.world).length)
     toRemove.forEach((body)=>{Composite.remove(engine.current.world, body)})
   }
@@ -308,11 +302,10 @@ function App() {
     <PropertiesMenu functions={{ reset:resetScene,erase:getIsErased }} worldProperties = {getWorldProperties}  objectProperties = {getProperties}/>
     <ProjectsPanel setSpawning = {getIsSpawning} spawnerProperties = {getSpawnerProperties} />
     <canvas ref={scene} onClick= {handleMouseDown} className= 'physics-engine'></canvas>
-    {/* <canvas ref={uiLayer}></canvas> */}
+   
     <GraphsMenu functions = {{reset:resetGraphing,stop:stopGraphing}} graphingData={{time:ticks,data:graphingPos}} graphSelect = {getIsGraphSelecting} />
     <Footer />
-    <img src="" alt="" />
-    {/* <Canvas /> */}
+    
 
     </>
       

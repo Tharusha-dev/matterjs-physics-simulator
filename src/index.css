@@ -134,7 +134,8 @@ a{
 .spawner-select{
   border: 1px solid white;
   display:flex;
-  height: 8vh;
+  flex-direction: column;
+  padding: 10% 0 10% 0 ;
   align-items: center;
 
 }
@@ -157,6 +158,15 @@ a{
   left:9.5vw;
 }
 
+
+.spawner {
+  cursor: pointer;
+
+  height: max-content;
+  border-radius: 1vw;
+   width: 80%;
+   background-color: var(--main-color);
+}
 .physics-engine{
   position: absolute;
   left:20vw;

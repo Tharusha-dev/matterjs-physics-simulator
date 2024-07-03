@@ -11,9 +11,7 @@ function WorldPropertiesMenu({worldProperties,stop,Index,functions}) {
       <p style={{margin:"5px"}}>Reset</p>
     </div>
 
-    <div onClick = {stop} className="stop-button">
-      <p style={{margin:"5px"}}>Play / Stop</p>
-    </div>
+   
     <div style={{display:"flex",alignItems:"center"}}>
       <p>Erase Mode</p>
     {/* <button onClick={erase} >Erase Object</button> */}
