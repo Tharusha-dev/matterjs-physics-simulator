@@ -28,6 +28,23 @@
   color: #61dafb;
 }
 
+
+.mobile-screen{
+  height: max-content;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10%;
+  box-sizing: border-box;
+  flex-direction: column;
+  text-align: center;
+
+}
+
+.mobile-screen h1 {
+  
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

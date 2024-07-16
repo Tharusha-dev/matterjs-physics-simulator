@@ -65,6 +65,10 @@ function App() {
   const isSpawningRef = useRef(false)
 
   const [spawnerLocation,setSpawnerLocation] = useState(null)
+
+  const [width, setWidth] = useState(window.innerWidth);
+
+  
   let spawnerLocationRef = useRef(null)
 
   const countTen = useRef(0)
@@ -109,6 +113,10 @@ function App() {
   const scene = useRef()   
   const isDragging = useRef(false)
   const engine = useRef(Engine.create())
+
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+}
 
 
   useEffect(() => {
@@ -194,13 +202,13 @@ function App() {
 
 
 
-
+      window.addEventListener('resize', handleWindowSizeChange);
   
 
 
     return () => {
 
-      
+      window.removeEventListener('resize', handleWindowSizeChange);
       Render.stop(render)
       World.clear(engine.current.world)
       Engine.clear(engine.current)
@@ -209,9 +217,11 @@ function App() {
       render.context = null
       render.textures = {}
     }
+
+    
   }, [])
 
-
+  const isMobile = width <= 768;
 
   const handleSelections = function(mouseConstraint){
 
@@ -299,11 +309,23 @@ function App() {
     
     <>
     <Header/>
+
+    {isMobile ? <div className='mobile-screen'>
+
+<h1>Please use a desktop device to use this website</h1>
+<h2>Sorry for the inconvenience caused</h2>
+    </div> : 
+    
+    <>
     <PropertiesMenu functions={{ reset:resetScene,erase:getIsErased }} worldProperties = {getWorldProperties}  objectProperties = {getProperties}/>
     <ProjectsPanel setSpawning = {getIsSpawning} spawnerProperties = {getSpawnerProperties} />
     <canvas ref={scene} onClick= {handleMouseDown} className= 'physics-engine'></canvas>
    
     <GraphsMenu functions = {{reset:resetGraphing,stop:stopGraphing}} graphingData={{time:ticks,data:graphingPos}} graphSelect = {getIsGraphSelecting} />
+    </>
+    }
+
+    
     <Footer />
     
 
