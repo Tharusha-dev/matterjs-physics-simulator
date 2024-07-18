@@ -62,7 +62,7 @@
 
 .color-selector {
     position: absolute;
-    left: 30%;
+    left: 120%;
 
 }
 .object-property-input {
@@ -78,4 +78,5 @@
     padding: 2% 0 2% 0;
     font-size: 100%;
     font-weight: bold;
+    
 }
