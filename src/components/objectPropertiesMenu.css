@@ -1,0 +1,81 @@
+.object-properties {
+    background-color:var(--gray-colr);
+    width: 100%;
+
+    position: relative;
+    padding: 4.4%;
+    box-sizing: border-box;
+    font-size: 90%
+}
+
+.object-selectors {
+    display: flex;
+   
+    justify-content: space-between;
+    width: 50%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+
+    
+}
+
+.object-selector {
+    background-color: white;
+
+    cursor: pointer;
+  
+
+}
+
+.circle {
+    width: 40%;
+    padding-bottom: 40%;
+    background: white;
+    border-radius: 50%;
+}
+
+.rectangle {
+    width: 40%;
+    background: white;
+    background-color: white;
+
+    cursor: pointer;
+
+
+}
+
+.color-selector-outer {
+    position: relative;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 30%;
+}
+
+.color-preview {
+    width: 20%;
+      height: 0;
+  padding-top: 20%;
+    background-color: green;
+}
+
+.color-selector {
+    position: absolute;
+    left: 30%;
+
+}
+.object-property-input {
+    max-width: 20%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    font-size: 100%;
+
+}
+
+.apply-button {
+    width: 30%;
+    padding: 2% 0 2% 0;
+    font-size: 100%;
+    font-weight: bold;
+}

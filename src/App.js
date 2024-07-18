@@ -5,24 +5,9 @@ import PropertiesMenu from './components/PropertiesMenu';
 import ProjectsPanel from './components/specialObjects.js';
 import GraphsMenu from './components/GraphsMenu';
 import Footer from './components/Footer.js';
+import ScreenSizeChangeWarning from './components/screenSizeChangeWarning.js';
 import './App.css';
-let testObj = Bodies.rectangle(200,200,40,40,)
-// let testObj2 = Bodies.rectangle(500,200,40,40,)
-let testObj2 = Bodies.circle(500,200,20)
 
-function drawCircle(ctx, x, y, radius, fill, stroke, strokeWidth) {
-  ctx.beginPath()
-  ctx.arc(x, y, radius, 0, 2 * Math.PI, false)
-  if (fill) {
-    ctx.fillStyle = fill
-    ctx.fill()
-  }
-  if (stroke) {
-    ctx.lineWidth = strokeWidth
-    ctx.strokeStyle = stroke
-    ctx.stroke()
-  }
-}
 
 
 function App() {
@@ -65,8 +50,11 @@ function App() {
   const isSpawningRef = useRef(false)
 
   const [spawnerLocation,setSpawnerLocation] = useState(null)
+  const [isScreenSizeWarning,setIsScreenSizeWarning] = useState(false)
 
   const [width, setWidth] = useState(window.innerWidth);
+  const [height, setHeight] = useState(window.innerHeight);
+
 
   
   let spawnerLocationRef = useRef(null)
@@ -74,6 +62,8 @@ function App() {
   const countTen = useRef(0)
 
   let graphingObject = null
+  let initialWidth;
+  let initialHeight;
 
   
 
@@ -116,13 +106,20 @@ function App() {
 
   function handleWindowSizeChange() {
     setWidth(window.innerWidth);
+    setHeight(window.innerHeight);
+    if (window.innerWidth != initialWidth || window.innerHeight != initialHeight && !isMobile){
+      setIsScreenSizeWarning(true);
+    }
 }
 
 
   useEffect(() => {
 
-    const cw = 1100;
-    const ch = 700;
+    initialWidth = window.innerWidth;
+    initialHeight = window.innerHeight;
+
+    const cw = width*0.57;
+    const ch = height*0.8;
 
 
 
@@ -221,7 +218,7 @@ function App() {
     
   }, [])
 
-  const isMobile = width <= 768;
+  const isMobile = width <= 935;
 
   const handleSelections = function(mouseConstraint){
 
@@ -322,10 +319,11 @@ function App() {
     <canvas ref={scene} onClick= {handleMouseDown} className= 'physics-engine'></canvas>
    
     <GraphsMenu functions = {{reset:resetGraphing,stop:stopGraphing}} graphingData={{time:ticks,data:graphingPos}} graphSelect = {getIsGraphSelecting} />
+   
+    
     </>
     }
-
-    
+{isScreenSizeWarning ?  <ScreenSizeChangeWarning/> : <></>}
     <Footer />
     
 

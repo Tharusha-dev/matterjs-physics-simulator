@@ -1,4 +1,5 @@
 import React from 'react';
+import './worldProperties.css'
 
 function WorldPropertiesMenu({worldProperties,stop,Index,functions}) {
 

@@ -10,10 +10,6 @@
    --gray-colr : rgb(80, 79, 79);
 }
 
-p{
-
-  font-size: 0.75vw;
-}
 
 
 body {
@@ -105,15 +101,19 @@ a{
 }
 
 .property-tab-button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  margin: 5px;
-  font-size: 0.85vw;
+  margin: 1%;
+  font-size:  90%;
   
   border-right:  2px solid black;
 
   text-align: center;
   border-radius: 5px;
   cursor: pointer;
+  font-weight: bold;
 
 }
 
@@ -121,10 +121,10 @@ a{
 .project-panel{
   position: absolute;
   text-align: center;
-  top: 58vh;
+  top: 65vh;
   left: 1vw;
   width: 18vw;
-  height: 40vh;
+  height: max-content;
   background-color: var(--accent-color);
   border-radius: 5px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -133,9 +133,11 @@ a{
 
 .spawner-select{
   border: 1px solid white;
+  margin: 5%;
   display:flex;
   flex-direction: column;
   padding: 10% 0 10% 0 ;
+  box-sizing: border-box;
   align-items: center;
 
 }
@@ -170,28 +172,12 @@ a{
 .physics-engine{
   position: absolute;
   left:20vw;
+  top: 15vh;
   /* width: 700px;
   height: 800px; */
 }
 
-.object-properties{
-  background-color:var(--gray-colr);
 
-  position: relative;
-  padding: 4.4%;
-  font-size: 0.75vw;
-}
-
-
-
-.object-selector{
-  background-color: white;
-  margin-left: 20px;
-  cursor: pointer;
-  height: 60px;
-  width: 60px;
-
-}
 
 
 /* .rectangle{
@@ -205,14 +191,6 @@ a{
 }
 
 
-.world-properties{
-  background-color:var(--gray-colr);
-  position: absolute;
-  padding: 4.5%;
-  top:14%;
-  height: 37vh;
-  width: 16vw;
-}
 
 .reset-button{
   width: max-content;
